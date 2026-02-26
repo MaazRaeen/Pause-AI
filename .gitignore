@@ -1,0 +1,434 @@
+# Pause AI - Git Ignore File
+
+# ============================================
+# ENVIRONMENT & SECRETS
+# ============================================
+.env
+.env.local
+.env.*.local
+.env*.example
+!.env.example
+*.env
+
+# API Keys & Credentials
+*.key
+*.pem
+secrets/
+credentials/
+
+# ============================================
+# PYTHON - Backend
+# ============================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Virtual environments
+venv/
+env/
+*.venv
+
+# ============================================
+# NODE.JS - Frontend
+# ============================================
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/build
+/dist
+/out
+
+# misc
+.DS_Store
+*.pem
+*.cer
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vite
+.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# ============================================
+# APPLICATION DATA & TEMPORARY FILES
+# ============================================
+
+# Temporary directories
+temp/
+tmp/
+cache/
+.cache/
+temp-files/
+
+# Video files (large)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.webm
+
+# Audio files (large)
+*.wav
+*.mp3
+*.aac
+*.flac
+*.ogg
+
+# Uploaded files
+uploads/
+downloads/
+
+# Data directories
+data/
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+
+# FAISS indices (large)
+*.faiss
+*.ivfdata
+faiss_index*
+
+# User session data
+sessions/
+
+# Storage
+storage/
+blob/
+
+# ============================================
+# LOGS & DEBUGGING
+# ============================================
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Sentry
+.sentry/
+
+# Debug files
+debug.txt
+*.trace
+
+# ============================================
+# IDE & EDITOR
+# ============================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains (PyCharm, WebStorm, etc.)
+.idea/
+*.iml
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+.sublime/
+
+# Vim
+.vim/
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+.#*
+\#*\#
+
+# Atom
+.atom/
+
+# ============================================
+# OS FILES
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+[Dd]esktop.ini
+
+# Linux
+.directory
+
+# ============================================
+# BUILD & DEPLOYMENT
+# ============================================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Kubernetes
+kustomization.yaml
+kustomization*.yaml
+
+# Heroku
+.env
+.slug
+
+# AWS
+.aws/
+*.zip
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# ============================================
+# TESTING & COVERAGE
+# ============================================
+
+# Coverage
+.coverage
+.htmlcov/
+coverage.xml
+htmlcov/
+
+# Test reports
+test-results/
+.test-cache/
+
+# ============================================
+# CI/CD
+# ============================================
+
+# GitHub Actions
+.github/workflows/secrets/
+
+# GitLab CI
+.gitlab-ci.yml.local
+
+# Jenkins
+.jenkins/
+
+# ============================================
+# PROJECT SPECIFIC
+# ============================================
+
+# Vector DB backups
+backups/
+*.faiss.bak
+
+# Model downloads
+models/
+*.bin
+
+# Video processing temporary files
+*.tmp
+*.partial
+
+# Database dumps
+*.sql
+*.sql.gz
+
+# ============================================
+# OPTIONAL: Specific to your setup
+# ============================================
+
+# If using Conda
+conda-env/
+*.yml
+
+# If using Poetry
+poetry.lock
+
+# If using pipenv
+Pipfile.lock
+
+# If using Docker
+docker-build/
+.docker/
+
+# If using Kubernetes
+k8s/
+*.yaml
+
+# ============================================
+# WHITELISTING IMPORTANT FILES
+# ============================================
+
+# DO NOT IGNORE - Essential files
+!.gitkeep
+!.env.example
+!.github/
+!.gitignore
+
+# Configuration files (kept as examples)
+!config/
+!docs/
+!scripts/
+
