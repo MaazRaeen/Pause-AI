@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useAudioPlayer } from '../hooks/useMedia';
+import { useState, useEffect, useRef } from 'react';
 import './DoubtResponse.css';
 
 function DoubtResponse({
@@ -8,24 +7,48 @@ function DoubtResponse({
   confidence,
   sources,
   processingTime,
-  onPlayAudio,
-  isLoadingAudio = false,
 }) {
-  const { isPlaying, playAudio, stopAudio } = useAudioPlayer();
   const [showSources, setShowSources] = useState(false);
   const [respondentType, setRespondentType] = useState('text'); // 'text' or 'audio'
+  const [isPlaying, setIsPlaying] = useState(false);
+  const synthRef = useRef(window.speechSynthesis);
+
+  // Stop playing if component unmounts
+  useEffect(() => {
+    return () => {
+      if (synthRef.current && isPlaying) {
+        synthRef.current.cancel();
+      }
+    };
+  }, [isPlaying]);
 
   const handlePlayResponse = () => {
-    if (answer) {
-      // In production, this would convert answer text to speech
-      // For now, we'll just show it as implemented
-      if (isPlaying) {
-        stopAudio();
-      } else {
-        // Call backend for TTS or use Web Speech API
-        if (onPlayAudio) {
-          onPlayAudio(answer);
-        }
+    if (isPlaying) {
+      synthRef.current.cancel();
+      setIsPlaying(false);
+    } else {
+      if (answer && synthRef.current) {
+        // Cancel any ongoing speech first
+        synthRef.current.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(answer);
+
+        // Pick a nice sounding voice if available
+        const voices = synthRef.current.getVoices();
+        const preferredVoice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+        if (preferredVoice) utterance.voice = preferredVoice;
+
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+
+        utterance.onstart = () => setIsPlaying(true);
+        utterance.onend = () => setIsPlaying(false);
+        utterance.onerror = (e) => {
+          console.error("SpeechSynthesis error", e);
+          setIsPlaying(false);
+        };
+
+        synthRef.current.speak(utterance);
       }
     }
   };
@@ -52,7 +75,7 @@ function DoubtResponse({
             Confidence: {(confidence * 100).toFixed(1)}%
           </span>
           <span className="processing-time">
-            ⚡ {processingTime ? `${processingTime}ms` : 'Calculating...'}
+            ⚡ {processingTime ? `${processingTime}s` : 'Calculating...'}
           </span>
         </div>
       </div>
@@ -60,7 +83,10 @@ function DoubtResponse({
       <div className="response-type-selector">
         <button
           className={`response-btn ${respondentType === 'text' ? 'active' : ''}`}
-          onClick={() => setRespondentType('text')}
+          onClick={() => {
+            if (isPlaying) handlePlayResponse(); // stop if playing
+            setRespondentType('text');
+          }}
         >
           📝 Read Answer
         </button>
@@ -84,19 +110,15 @@ function DoubtResponse({
             <button
               className={`btn btn-primary btn-lg play-btn ${isPlaying ? 'playing' : ''}`}
               onClick={handlePlayResponse}
-              disabled={!answer || isLoadingAudio}
+              disabled={!answer}
             >
-              {isLoadingAudio ? (
-                <>
-                  <span className="spinner-mini"></span> Preparing Audio...
-                </>
-              ) : isPlaying ? (
-                <>⏸ Pause</>
+              {isPlaying ? (
+                <>⏹ Pause</>
               ) : (
-                <>▶ Play Audio Response</>
+                <>▶ Play Native AI Voice</>
               )}
             </button>
-            <p className="audio-info">Click to listen to the AI-generated response</p>
+            <p className="audio-info">Click to listen to the browser-generated native TTS</p>
           </div>
         </div>
       )}
@@ -108,7 +130,7 @@ function DoubtResponse({
             onClick={() => setShowSources(!showSources)}
           >
             <span className="toggle-icon">{showSources ? '▼' : '▶'}</span>
-            📍 Sources ({sources.length})
+            📍 Context Sources ({sources.length})
           </button>
 
           {showSources && (
@@ -119,11 +141,11 @@ function DoubtResponse({
                     <span className="source-timestamp">
                       ⏱️ {formatTime(source.timestamp)}
                     </span>
-                    <span className="source-relevance">
-                      Match: {(source.relevance_score * 100).toFixed(1)}%
+                    <span className="source-relevance badge">
+                      {source.type.toUpperCase()}
                     </span>
                   </div>
-                  <p className="source-text">{source.text}</p>
+                  <p className="source-text">{source.content}</p>
                 </div>
               ))}
             </div>
@@ -132,9 +154,14 @@ function DoubtResponse({
       )}
 
       <div className="response-actions">
-        <button className="btn btn-outline">👍 Helpful</button>
-        <button className="btn btn-outline">👎 Not Helpful</button>
-        <button className="btn btn-outline">📋 Copy Answer</button>
+        <button className="btn btn-outline" title="Looks good!">👍 Helpful</button>
+        <button className="btn btn-outline" title="Needs improvement">👎 Not Helpful</button>
+        <button
+          className="btn btn-outline"
+          onClick={() => navigator.clipboard.writeText(answer)}
+        >
+          📋 Copy Answer
+        </button>
       </div>
     </div>
   );

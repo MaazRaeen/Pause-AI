@@ -1,39 +1,94 @@
-import { useState } from 'react';
-import { useAudioRecorder } from '../hooks/useMedia';
+import { useState, useRef, useEffect } from 'react';
 import './DoubtCapture.css';
+
+// Check for browser support
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 function DoubtCapture({ timestamp, onSubmit, isLoading = false }) {
   const [inputMethod, setInputMethod] = useState('text'); // 'text' or 'voice'
   const [textInput, setTextInput] = useState('');
-  const { isRecording, audioBlob, startRecording, stopRecording, resetRecording } =
-    useAudioRecorder();
+  const [isRecording, setIsRecording] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const recognitionRef = useRef(null);
+
+  useEffect(() => {
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+
+      recognitionRef.current.onresult = (event) => {
+        let finalTranscript = '';
+        let interimTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+
+        // Update either the live transcript or append to textInput directly later
+        setTranscript(finalTranscript || interimTranscript);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+        setIsRecording(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsRecording(false);
+      };
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  const startRecording = () => {
+    if (recognitionRef.current) {
+      setTranscript('');
+      setIsRecording(true);
+      recognitionRef.current.start();
+    } else {
+      alert('Your browser does not support Speech Recognition. Please use Chrome.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (recognitionRef.current && isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+      if (transcript) {
+        setTextInput(textInput ? textInput + ' ' + transcript : transcript);
+        setTranscript('');
+      }
+    }
+  };
 
   const handleSubmit = async () => {
-    if (inputMethod === 'text') {
-      if (textInput.trim()) {
-        onSubmit({
-          type: 'text',
-          content: textInput,
-          timestamp: timestamp,
-        });
-        setTextInput('');
-      }
-    } else if (inputMethod === 'voice') {
-      if (audioBlob) {
-        onSubmit({
-          type: 'voice',
-          content: audioBlob,
-          timestamp: timestamp,
-        });
-        resetRecording();
-      }
+    const finalContent = textInput.trim() || transcript.trim();
+    if (finalContent) {
+      onSubmit({
+        type: 'text',
+        content: finalContent,
+        timestamp: timestamp,
+      });
+      setTextInput('');
+      setTranscript('');
     }
   };
 
   const handleToggleMethod = () => {
     setInputMethod(inputMethod === 'text' ? 'voice' : 'text');
-    setTextInput('');
-    resetRecording();
+    if (isRecording) {
+      stopRecording();
+    }
   };
 
   return (
@@ -46,7 +101,10 @@ function DoubtCapture({ timestamp, onSubmit, isLoading = false }) {
       <div className="input-method-tabs">
         <button
           className={`tab ${inputMethod === 'text' ? 'active' : ''}`}
-          onClick={() => setInputMethod('text')}
+          onClick={() => {
+            if (isRecording) stopRecording();
+            setInputMethod('text');
+          }}
         >
           ✍️ Text
         </button>
@@ -72,48 +130,41 @@ function DoubtCapture({ timestamp, onSubmit, isLoading = false }) {
         </div>
       ) : (
         <div className="voice-input-wrapper">
-          {!audioBlob ? (
-            <div className="voice-recording">
-              {!isRecording ? (
-                <>
-                  <p className="voice-instruction">
-                    Click the button below to start recording your question
-                  </p>
-                  <button
-                    className="btn btn-primary btn-lg record-btn"
-                    onClick={startRecording}
-                    disabled={isLoading}
-                  >
-                    🎤 Start Recording
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="recording-indicator">
-                    <span className="pulse"></span>
-                    Recording...
-                  </div>
-                  <button
-                    className="btn btn-danger btn-lg record-btn"
-                    onClick={stopRecording}
-                  >
-                    ⏹ Stop Recording
-                  </button>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="voice-recorded">
-              <p className="success-message">✓ Recording saved</p>
-              <button
-                className="btn btn-outline"
-                onClick={resetRecording}
-                disabled={isLoading}
-              >
-                🔄 Re-record
-              </button>
-            </div>
-          )}
+          <div className="voice-recording">
+            {!isRecording ? (
+              <>
+                <p className="voice-instruction">
+                  Click to start dictating your question:
+                </p>
+                <div className="current-text-preview">
+                  {textInput ? `"${textInput}"` : ''}
+                </div>
+                <button
+                  className="btn btn-primary btn-lg record-btn"
+                  onClick={startRecording}
+                  disabled={isLoading}
+                >
+                  🎤 Start Speaking
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="recording-indicator">
+                  <span className="pulse"></span>
+                  Listening...
+                </div>
+                <div className="live-transcript">
+                  {transcript || "Speak now..."}
+                </div>
+                <button
+                  className="btn btn-danger btn-lg record-btn"
+                  onClick={stopRecording}
+                >
+                  ⏹ Stop Speaking
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
 
@@ -121,21 +172,20 @@ function DoubtCapture({ timestamp, onSubmit, isLoading = false }) {
         <button
           className="btn btn-outline"
           onClick={handleToggleMethod}
-          disabled={isLoading || (inputMethod === 'voice' && isRecording)}
+          disabled={isLoading || isRecording}
         >
-          Switch to {inputMethod === 'text' ? 'Voice' : 'Text'}
+          Switch back to {inputMethod === 'text' ? 'Voice' : 'Text'}
         </button>
         <button
           className="btn btn-primary btn-lg"
           onClick={handleSubmit}
           disabled={
             isLoading ||
-            (inputMethod === 'text' && !textInput.trim()) ||
-            (inputMethod === 'voice' && !audioBlob) ||
+            (!textInput.trim() && !transcript.trim()) ||
             isRecording
           }
         >
-          {isLoading ? '⏳ Processing...' : '📤 Submit Question'}
+          {isLoading ? '⏳ Simulated Pipeline...' : '📤 Submit Question'}
         </button>
       </div>
     </div>

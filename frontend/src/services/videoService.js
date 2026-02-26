@@ -1,92 +1,65 @@
 import apiClient from './api';
 
+// --- MOCK SERVICE FOR FRONTEND-ONLY SIMULATION ---
+
+const MOCK_DELAY = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Video Services
 export const uploadVideo = async (videoUrl) => {
-  try {
-    const response = await apiClient.post('/videos/upload', {
-      video_source: 'url',
-      video_url: videoUrl,
-      title: videoUrl.split('/').pop() || 'Untitled',
-      description: 'Video uploaded via Pause AI',
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  await MOCK_DELAY(1500);
+  return { id: 'mock-video-123', url: videoUrl, title: 'Sample Video' };
 };
 
 export const getVideoStatus = async (videoId) => {
-  try {
-    const response = await apiClient.get(`/videos/${videoId}/status`);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  await MOCK_DELAY(500);
+  // Simulating immediate readiness for frontend demo
+  return { status: 'completed' };
 };
 
 export const getVideoDetails = async (videoId) => {
-  try {
-    const response = await apiClient.get(`/videos/${videoId}`);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  await MOCK_DELAY(500);
+  return {
+    id: videoId,
+    title: 'Pause AI Interactive Demo Video',
+    video_url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' // Public sample video
+  };
 };
 
 export const getVideoSegments = async (videoId) => {
-  try {
-    const response = await apiClient.get(`/videos/${videoId}/segments`);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  await MOCK_DELAY(500);
+  return { segments: [] };
 };
 
 // Doubt/Chat Services
 export const askQuestion = async (videoId, question, contextWindow = 5) => {
-  try {
-    const response = await apiClient.post('/doubts/ask', {
-      video_id: videoId,
-      question: question,
-      context_window: contextWindow,
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  // Simulate the whole RAG pipeline delay
+  await MOCK_DELAY(3000);
+  
+  // Return a mock response with simulated pipeline data
+  return {
+    answer: `Based on the context at this timestamp, here is the AI explanation for "${question}": \n\nThe video context confirms that this concept is essential for modern web applications. The visual frames show a diagram explaining the architecture, and the narrator explicitly mentions the importance of this topic. This allows systems to be highly resilient and dynamic.`,
+    confidence: 0.95,
+    processing_time: 2.8,
+    // We mock the source context that the AI supposedly extracted
+    sources: [
+      { type: 'transcript', content: '...and as you can see, this mechanism...', timestamp: 125 },
+      { type: 'ocr', content: '[Detected text in frame]: SYSTEM ARCHITECTURE OVERVIEW', timestamp: 125 }
+    ]
+  };
 };
 
 export const getChatHistory = async (videoId, limit = 50, offset = 0) => {
-  try {
-    const response = await apiClient.get(`/videos/${videoId}/chat-history`, {
-      params: { limit, offset },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  await MOCK_DELAY(500);
+  return { chats: [] };
 };
 
 // Search Services
 export const searchContent = async (videoId, query, topK = 5) => {
-  try {
-    const response = await apiClient.post('/search', {
-      video_id: videoId,
-      query: query,
-      top_k: topK,
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  await MOCK_DELAY(1000);
+  return { results: [] };
 };
 
 // Health Check
 export const checkHealth = async () => {
-  try {
-    const response = await apiClient.get('/health');
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
+  return { status: 'ok' };
 };
