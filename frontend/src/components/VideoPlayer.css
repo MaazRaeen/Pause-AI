@@ -1,0 +1,136 @@
+.video-player-container {
+  position: relative;
+  width: 100%;
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  group: 'video-player';
+}
+
+.video-element {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: pointer;
+}
+
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  padding: 40px 15px 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  opacity: 0;
+}
+
+.video-controls.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  transition: height 0.2s ease;
+}
+
+.progress-bar-container:hover {
+  height: 6px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.controls-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.controls-left,
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-control {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-control:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.btn-doubt {
+  background: var(--primary-color) !important;
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.btn-doubt:hover {
+  background: var(--primary-dark) !important;
+  box-shadow: var(--shadow-md);
+}
+
+.time-display {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  font-family: 'Courier New', monospace;
+}
+
+@media (max-width: 768px) {
+  .video-player-container {
+    aspect-ratio: 16 / 9;
+  }
+
+  .controls-bottom {
+    flex-wrap: wrap;
+  }
+
+  .btn-doubt {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .btn-control {
+    padding: 6px 10px;
+    font-size: 1rem;
+  }
+
+  .time-display {
+    font-size: 0.8rem;
+  }
+}

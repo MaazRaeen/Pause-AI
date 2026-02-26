@@ -1,0 +1,370 @@
+.video-page-container {
+  width: 100%;
+  background-color: var(--bg-light);
+  padding: 20px;
+  min-height: calc(100vh - 80px);
+}
+
+/* Header section */
+.video-page-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: var(--bg-white);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+}
+
+.video-page-header h1 {
+  flex: 1;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Main content layout */
+.video-page-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Video section */
+.video-section {
+  position: relative;
+  background: var(--bg-white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 16 / 9;
+}
+
+.processing-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  z-index: 10;
+  color: white;
+}
+
+.processing-overlay p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.processing-hint {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Doubt section */
+.doubt-section {
+  background: var(--bg-white);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+.doubt-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.doubt-section-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Response section */
+.response-section {
+  background: var(--bg-white);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+.response-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+/* Chat history section */
+.chat-history-section {
+  background: var(--bg-white);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+.chat-history-section .btn {
+  width: 100%;
+}
+
+.chat-history-list {
+  margin-top: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border-color);
+  padding-top: 15px;
+}
+
+.chat-item {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  gap: 12px;
+}
+
+.chat-item:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.chat-timestamp {
+  background-color: var(--bg-light);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  min-width: 45px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.chat-content {
+  flex: 1;
+}
+
+.chat-question {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.chat-answer {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.no-history {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Loading skeleton */
+.loading-skeleton {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    var(--bg-light) 0%,
+    var(--bg-white) 50%,
+    var(--bg-light) 100%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-light) 0%,
+    var(--bg-white) 50%,
+    var(--bg-light) 100%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Error state */
+.video-page-error {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-light);
+  padding: 20px;
+}
+
+.error-content {
+  background: var(--bg-white);
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+}
+
+.error-content h1 {
+  margin-top: 0;
+  color: #dc2626;
+  font-size: 2rem;
+}
+
+.error-content p {
+  color: var(--text-secondary);
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.error-content .btn {
+  margin-top: 20px;
+}
+
+/* Mobile responsive */
+@media (max-width: 1024px) {
+  .video-page-content {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    max-height: 400px;
+  }
+
+  .video-section {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 768px) {
+  .video-page-container {
+    padding: 10px;
+  }
+
+  .video-page-header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .video-page-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .video-page-header .btn {
+    align-self: flex-start;
+  }
+
+  .video-section {
+    aspect-ratio: 16 / 9;
+  }
+
+  .sidebar {
+    grid-column: 1;
+    max-height: none;
+    order: -1;
+  }
+
+  .doubt-section,
+  .response-section,
+  .chat-history-section {
+    padding: 15px;
+  }
+
+  .chat-history-list {
+    max-height: 300px;
+  }
+
+  .chat-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .chat-timestamp {
+    width: 100%;
+  }
+}
+
+/* Scrollbar styling for chat history */
+.chat-history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-history-list::-webkit-scrollbar-track {
+  background: var(--bg-light);
+  border-radius: 3px;
+}
+
+.chat-history-list::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+.chat-history-list::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}

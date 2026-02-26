@@ -1,0 +1,198 @@
+.doubt-capture-card {
+  background: var(--bg-white);
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.doubt-capture-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.doubt-capture-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.timestamp-badge {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.input-method-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tab {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab:hover {
+  color: var(--primary-color);
+}
+
+.tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.text-input-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.doubt-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  transition: var(--transition);
+}
+
+.doubt-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.doubt-input:disabled {
+  background-color: var(--bg-gray);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.char-count {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background: var(--bg-white);
+  padding: 0 4px;
+}
+
+.voice-input-wrapper {
+  margin-bottom: 20px;
+}
+
+.voice-recording,
+.voice-recorded {
+  padding: 30px 20px;
+  text-align: center;
+  background-color: var(--bg-gray);
+  border-radius: 6px;
+}
+
+.voice-instruction {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.record-btn {
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.recording-indicator {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--danger-color);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pulse {
+  width: 12px;
+  height: 12px;
+  background-color: var(--danger-color);
+  border-radius: 50%;
+  animation: pulse-animation 1.5s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.success-message {
+  color: var(--success-color);
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.capture-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.capture-actions .btn {
+  flex: 1;
+  max-width: 250px;
+}
+
+@media (max-width: 768px) {
+  .doubt-capture-card {
+    padding: 16px;
+  }
+
+  .capture-actions {
+    flex-direction: column;
+  }
+
+  .capture-actions .btn {
+    max-width: 100%;
+  }
+
+  .input-method-tabs {
+    flex-wrap: wrap;
+  }
+
+  .doubt-input {
+    min-height: 80px;
+  }
+
+  .record-btn {
+    min-width: 150px;
+  }
+}
