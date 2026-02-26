@@ -218,11 +218,14 @@ const VideoPage = () => {
             </div>
           )}
 
-          <VideoPlayer
-            videoUrl={videoDetails?.video_url}
-            onTimestampPause={handleVideoTimestampPause}
-            disabled={!isVideoReady}
-          />
+          {videoDetails?.video_url ? (
+            <VideoPlayer
+              key={videoDetails.video_url}
+              videoUrl={videoDetails.video_url}
+              onTimestampPause={handleVideoTimestampPause}
+              disabled={!isVideoReady}
+            />
+          ) : null}
         </div>
 
         {/* Sidebar */}

@@ -42,7 +42,7 @@ export const askQuestion = async (videoId, question, contextWindow = 5) => {
 
   // Return a mock response with simulated pipeline data
   return {
-    answer: `Based on the context at this timestamp, here is the AI explanation for "${question}": \n\nThe video context confirms that this concept is essential for modern web applications. The visual frames show a diagram explaining the architecture, and the narrator explicitly mentions the importance of this topic. This allows systems to be highly resilient and dynamic.`,
+    answer: `[Simulated AI Mock] Based on the context at this timestamp, here is the explanation for your doubt: "${question}".\n\nThe mock video context confirms that this concept is essential for modern applications. The visual frames show a diagram explaining the architecture, and the narrator explicitly mentions the importance of this topic. This allows systems to be highly resilient and dynamic.`,
     confidence: 0.95,
     processing_time: 2.8,
     // We mock the source context that the AI supposedly extracted

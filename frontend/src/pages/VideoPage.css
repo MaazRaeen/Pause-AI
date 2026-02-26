@@ -87,7 +87,12 @@
 
 /* Doubt section */
 .doubt-section {
-  /* Inherits card styles */
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
 }
 
 .doubt-section-header {
@@ -105,7 +110,12 @@
 
 /* Response section */
 .response-section {
-  /* Inherits slide-up animations */
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
 }
 
 .response-section h3 {
@@ -116,7 +126,7 @@
 
 /* Chat history section */
 .chat-history-section {
-  padding: 20px;
+  padding: 24px;
 }
 
 .chat-history-section .btn {

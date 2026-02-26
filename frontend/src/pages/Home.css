@@ -1,7 +1,8 @@
 .home-container {
   width: 100%;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  padding: 40px 20px;
+  background: transparent;
+  /* Rely on index.css animated global background */
+  padding: 60px 20px;
   min-height: calc(100vh - 80px);
 }
 
@@ -22,6 +23,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -64,6 +66,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -97,9 +100,11 @@
 .loading-state {
   text-align: center;
   padding: 40px;
-  background-color: var(--bg-light);
-  border-radius: 8px;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--card-radius);
   margin-top: 20px;
+  box-shadow: var(--shadow-glow);
 }
 
 .loading-state .spinner {
@@ -139,8 +144,9 @@
 
 .or-divider span {
   position: relative;
-  background-color: var(--bg-light);
+  background-color: var(--bg-dark);
   padding: 0 15px;
+  font-weight: 500;
 }
 
 /* Quick Load Section */
@@ -154,6 +160,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -190,17 +197,20 @@
 }
 
 .feature-card {
-  background: var(--bg-white);
-  padding: 25px;
-  border-radius: 8px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-color);
   box-shadow: var(--shadow-md);
-  transition: var(--transition);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-align: center;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-glow);
+  border-color: var(--primary-light);
 }
 
 .feature-icon {
@@ -236,9 +246,11 @@
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
-  padding: 30px;
-  background: var(--bg-white);
-  border-radius: 8px;
+  padding: 40px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-md);
 }
 
@@ -282,9 +294,11 @@
 /* Tech Stack */
 .tech-stack {
   text-align: center;
-  background: var(--bg-white);
-  padding: 40px 20px;
-  border-radius: 8px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  padding: 50px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-md);
   margin-bottom: 40px;
 }

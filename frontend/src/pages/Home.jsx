@@ -5,16 +5,19 @@ import './Home.css';
 
 function Home() {
   const [videoUrl, setVideoUrl] = useState('');
+  const [videoFile, setVideoFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [videoIdToOpen, setVideoIdToOpen] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
   const navigate = useNavigate();
 
   const handleVideoSubmit = async (e) => {
     e.preventDefault();
+    e.preventDefault();
 
-    if (!videoUrl.trim()) {
-      setError('Please enter a valid video URL');
+    if (!videoUrl.trim() && !videoFile) {
+      setError('Please enter a valid video URL or upload a file.');
       return;
     }
 
@@ -22,20 +25,49 @@ function Home() {
     setError('');
 
     try {
-      const response = await uploadVideo(videoUrl);
-      console.log('Video uploaded:', response);
+      let finalVideoUrl = videoUrl;
+      let finalTitle = 'Dynamic Video Upload';
+      let finalId = 'vid-custom';
 
-      // Navigate to video page using the safe video ID while passing the full URL context in the state
-      navigate(`/video/${response.id || 'vid-custom'}`, {
-        state: { videoUrl: videoUrl, title: response.title },
+      // 1. If physical file provided, send the file to the new node server
+      if (videoFile) {
+        setUploadProgress(10);
+        const formData = new FormData();
+        formData.append('video', videoFile);
+
+        const uploadRes = await fetch('http://localhost:3001/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          throw new Error('Upload failed on server.');
+        }
+
+        const data = await uploadRes.json();
+
+        // 2. Override routing URLs with the newly processed physical backend URL directly 
+        finalVideoUrl = data.video_url;
+        finalId = data.video_id;
+        finalTitle = data.title;
+        setUploadProgress(100);
+      } else {
+        // Mock standard upload processing delay
+        await uploadVideo(videoUrl);
+      }
+
+      // Navigate to video page, using the safe video ID / physical video url in the state
+      navigate(`/video/${encodeURIComponent(finalId)}`, {
+        state: { videoUrl: finalVideoUrl, title: finalTitle },
       });
     } catch (err) {
       console.error('Upload error:', err);
       setError(err.message || 'Failed to upload video. Please try again.');
+    } finally {
       setIsLoading(false);
+      setUploadProgress(0);
     }
   };
-
   const handleQuickLoad = () => {
     if (videoIdToOpen.trim()) {
       navigate(`/video/${videoIdToOpen.trim()}`);
@@ -67,18 +99,41 @@ function Home() {
 
           <form onSubmit={handleVideoSubmit} className="upload-form">
             <div className="input-group">
-              <label htmlFor="videoUrl">Video URL</label>
+              <label htmlFor="videoUrl">Paste a Link</label>
               <input
                 id="videoUrl"
                 type="url"
-                placeholder="https://example.com/video.mp4"
+                placeholder="https://example.com/video.mp4 or YouTube link"
                 value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                disabled={isLoading}
+                onChange={(e) => {
+                  setVideoUrl(e.target.value);
+                  if (e.target.value) setVideoFile(null); // Clear file if URL typed
+                }}
+                disabled={isLoading || videoFile !== null}
                 className="video-input"
               />
+            </div>
+
+            <div className="or-divider" style={{ margin: '15px 0' }}>
+              <span>OR</span>
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="videoFile">Upload Local File</label>
+              <input
+                id="videoFile"
+                type="file"
+                accept="video/*"
+                onChange={(e) => {
+                  setVideoFile(e.target.files[0]);
+                  if (e.target.files[0]) setVideoUrl(''); // Clear URL if file selected
+                }}
+                disabled={isLoading || !!videoUrl.trim()}
+                className="video-input"
+                style={{ padding: '8px', cursor: 'pointer' }}
+              />
               <small className="input-hint">
-                Supported: YouTube, Vimeo, direct MP4, WebM, MOV links
+                Supported: YouTube via Link OR Direct File Upload (.mp4, .mov, .webm)
               </small>
             </div>
 
@@ -87,7 +142,8 @@ function Home() {
             <button
               type="submit"
               className="btn btn-primary btn-lg"
-              disabled={isLoading || !videoUrl.trim()}
+              disabled={isLoading || (!videoUrl.trim() && !videoFile)}
+              style={{ width: '100%', marginTop: '10px' }}
             >
               {isLoading ? '⏳ Processing...' : '🚀 Load Video'}
             </button>

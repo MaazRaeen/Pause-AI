@@ -17,10 +17,9 @@ function VideoPlayer({ videoUrl, onTimestampPause, onTimeUpdate }) {
   const handleProgress = (state) => {
     setCurrentTime(state.playedSeconds);
     onTimeUpdate?.(state.playedSeconds);
-  };
-
-  const handleDuration = (dur) => {
-    setDuration(dur);
+    if (!duration && playerRef.current) {
+      setDuration(playerRef.current.getDuration() || 0);
+    }
   };
 
   const handleSeek = (e) => {
@@ -82,7 +81,6 @@ function VideoPlayer({ videoUrl, onTimestampPause, onTimeUpdate }) {
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onProgress={handleProgress}
-          onDuration={handleDuration}
           width="100%"
           height="100%"
           style={{ position: 'absolute', top: 0, left: 0 }}
