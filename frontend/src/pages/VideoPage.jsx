@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
 import DoubtCapture from '../components/DoubtCapture';
 import DoubtResponse from '../components/DoubtResponse';
@@ -25,6 +25,7 @@ const MOCK_PIPELINE_STAGES = [
 const VideoPage = () => {
   const { videoId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Video state
   const [videoDetails, setVideoDetails] = useState(null);
@@ -51,10 +52,18 @@ const VideoPage = () => {
     const fetchVideoData = async () => {
       try {
         setError(null);
-        const details = await getVideoDetails(videoId);
+        let decodedId = videoId ? decodeURIComponent(videoId) : 'default';
+        const details = await getVideoDetails(decodedId);
+
+        // Use the actual user-input URL from the router navigation state if present
+        if (location.state?.videoUrl) {
+          details.video_url = location.state.videoUrl;
+          details.title = location.state.title || 'Dynamic Video Upload';
+        }
+
         setVideoDetails(details);
 
-        const status = await getVideoStatus(videoId);
+        const status = await getVideoStatus(decodedId);
         setVideoProcessingStatus(status.status);
         setIsVideoReady(status.status === 'completed' || status.status === 'ready');
 
@@ -71,7 +80,8 @@ const VideoPage = () => {
   const loadChatHistory = useCallback(async () => {
     try {
       setIsLoadingChat(true);
-      const history = await getChatHistory(videoId, 50, 0);
+      const decodedId = decodeURIComponent(videoId);
+      const history = await getChatHistory(decodedId, 50, 0);
       setChatHistory(history.chats || []);
     } catch (err) {
       console.error('Error loading chat history:', err);
@@ -111,8 +121,9 @@ const VideoPage = () => {
         });
       }, 700); // Progress stage every 700ms
 
+      const decodedId = decodeURIComponent(videoId);
       const response = await askQuestion(
-        videoId,
+        decodedId,
         doubtData.content,
         5
       );

@@ -289,7 +289,3 @@ a:hover {
   background: var(--text-muted);
   border-radius: 4px;
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
-}

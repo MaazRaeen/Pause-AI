@@ -12,7 +12,7 @@ function Home() {
 
   const handleVideoSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!videoUrl.trim()) {
       setError('Please enter a valid video URL');
       return;
@@ -24,10 +24,10 @@ function Home() {
     try {
       const response = await uploadVideo(videoUrl);
       console.log('Video uploaded:', response);
-      
-      // Navigate to video page with the video ID
-      navigate(`/video/${response.video_id}`, {
-        state: { videoUrl: videoUrl, ...response },
+
+      // Navigate to video page using the safe video ID while passing the full URL context in the state
+      navigate(`/video/${response.id || 'vid-custom'}`, {
+        state: { videoUrl: videoUrl, title: response.title },
       });
     } catch (err) {
       console.error('Upload error:', err);
@@ -38,7 +38,7 @@ function Home() {
 
   const handleQuickLoad = () => {
     if (videoIdToOpen.trim()) {
-      navigate(`/video/${videoIdToOpen}`);
+      navigate(`/video/${videoIdToOpen.trim()}`);
       setVideoIdToOpen('');
     }
   };

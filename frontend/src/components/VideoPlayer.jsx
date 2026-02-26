@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import ReactPlayer from 'react-player';
 import './VideoPlayer.css';
 
 function VideoPlayer({ videoUrl, onTimestampPause, onTimeUpdate }) {
-  const videoRef = useRef(null);
+  const playerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -10,46 +11,31 @@ function VideoPlayer({ videoUrl, onTimestampPause, onTimeUpdate }) {
   const controlsTimeoutRef = useRef(null);
 
   const handlePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
+    setIsPlaying(!isPlaying);
   };
 
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      const newTime = videoRef.current.currentTime;
-      setCurrentTime(newTime);
-      onTimeUpdate?.(newTime);
-    }
+  const handleProgress = (state) => {
+    setCurrentTime(state.playedSeconds);
+    onTimeUpdate?.(state.playedSeconds);
   };
 
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setDuration(videoRef.current.duration);
-    }
+  const handleDuration = (dur) => {
+    setDuration(dur);
   };
 
   const handleSeek = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const percent = (e.clientX - rect.left) / rect.width;
     const newTime = percent * duration;
-    if (videoRef.current) {
-      videoRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
+
+    if (playerRef.current) {
+      playerRef.current.seekTo(percent);
     }
   };
 
   const handlePauseForDoubt = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-      onTimestampPause?.(currentTime);
-    }
+    setIsPlaying(false);
+    onTimestampPause?.(currentTime);
   };
 
   const handleMouseMove = () => {
@@ -88,16 +74,25 @@ function VideoPlayer({ videoUrl, onTimestampPause, onTimeUpdate }) {
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
     >
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onClick={handlePlayPause}
-        className="video-element"
-      />
+      <div className="video-element-wrapper" onClick={handlePlayPause}>
+        <ReactPlayer
+          ref={playerRef}
+          url={videoUrl}
+          playing={isPlaying}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onProgress={handleProgress}
+          onDuration={handleDuration}
+          width="100%"
+          height="100%"
+          style={{ position: 'absolute', top: 0, left: 0 }}
+          config={{
+            youtube: {
+              playerVars: { showinfo: 1, controls: 0 }
+            }
+          }}
+        />
+      </div>
 
       <div className={`video-controls ${showControls ? 'visible' : ''}`}>
         {/* Progress bar */}

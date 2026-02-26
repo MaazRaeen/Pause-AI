@@ -18,10 +18,15 @@ export const getVideoStatus = async (videoId) => {
 
 export const getVideoDetails = async (videoId) => {
   await MOCK_DELAY(500);
+
+  // To support dynamic URLs directly from the Home page state or local storage 
+  // we check if it looks like a URL. Otherwise fallback.
+  const isUrl = videoId.startsWith('http') || videoId.startsWith('www');
+
   return {
     id: videoId,
-    title: 'Pause AI Interactive Demo Video',
-    video_url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' // Public sample video
+    title: isUrl ? 'Dynamic Video Upload' : 'Pause AI Interactive Demo Video',
+    video_url: isUrl ? videoId : 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
   };
 };
 
@@ -34,7 +39,7 @@ export const getVideoSegments = async (videoId) => {
 export const askQuestion = async (videoId, question, contextWindow = 5) => {
   // Simulate the whole RAG pipeline delay
   await MOCK_DELAY(3000);
-  
+
   // Return a mock response with simulated pipeline data
   return {
     answer: `Based on the context at this timestamp, here is the AI explanation for "${question}": \n\nThe video context confirms that this concept is essential for modern web applications. The visual frames show a diagram explaining the architecture, and the narrator explicitly mentions the importance of this topic. This allows systems to be highly resilient and dynamic.`,
