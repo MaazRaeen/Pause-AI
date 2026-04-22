@@ -1,0 +1,9 @@
+flask
+youtube-transcript-api
+openai
+flask-cors
+openai-whisper
+faiss-cpu
+sentence-transformers
+moviepy
+python-dotenv

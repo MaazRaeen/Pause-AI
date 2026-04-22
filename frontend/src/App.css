@@ -27,6 +27,7 @@ main {
 }
 
 @media (max-width: 1024px) {
+
   .grid-2,
   .grid-3 {
     grid-template-columns: 1fr;
@@ -191,6 +192,7 @@ textarea {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
