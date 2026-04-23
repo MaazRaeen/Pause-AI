@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = os.getenv("OPENAI_API_KEY", "YOUR_OPENAI_API_KEY")
+openai.api_key = os.getenv("GROQ_API_KEY", "YOUR_GROQ_API_KEY")
 
 def get_context(video_id, timestamp):
     try:
@@ -40,9 +40,12 @@ def ask():
 
         prompt = f"Context: {context}\nQuestion: {question}\nAnswer based only on context."
 
-        client = openai.OpenAI(api_key=openai.api_key)
+        client = openai.OpenAI(
+            api_key=os.getenv("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1"
+        )
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}]
         )
 

@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY", "YOUR_OPENAI_API_KEY")
+openai.api_key = os.getenv("GROQ_API_KEY", "YOUR_GROQ_API_KEY")
 
 def process_video_and_query(video_path, query):
     """
@@ -65,9 +65,12 @@ def process_video_and_query(video_path, query):
 
     print("\n---------------- STEP 6: LLM Answer ----------------")
     try:
-        client = openai.OpenAI(api_key=openai.api_key)
+        client = openai.OpenAI(
+            api_key=os.getenv("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1"
+        )
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama-3.1-8b-instant",
             messages=[{
                 "role": "user",
                 "content": f"Context: {context}\nQuestion: {query}\nAnswer based only on context."
