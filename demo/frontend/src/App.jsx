@@ -11,6 +11,7 @@ function App() {
   const [context, setContext] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isTheaterMode, setIsTheaterMode] = useState(false);
   
   const playerRef = useRef(null);
 
@@ -273,11 +274,17 @@ function App() {
         <p>Interactive Video Context & Q&A</p>
       </header>
 
-      <main className="layout">
+      <main className={`layout ${isTheaterMode ? 'theater-mode' : ''}`}>
         <section className="video-section">
           <div className="player-wrapper holographic-border">
             <div id="player"></div>
           </div>
+          <button 
+            className="theater-mode-btn action-button secondary-btn hover-lift"
+            onClick={() => setIsTheaterMode(!isTheaterMode)}
+          >
+            {isTheaterMode ? 'Exit Theater Mode' : '📺 Enter Theater Mode'}
+          </button>
         </section>
 
         <section className="interaction-panel holographic-glass">

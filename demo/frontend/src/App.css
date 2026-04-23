@@ -855,3 +855,29 @@ textarea:focus, .active-textarea {
   0% { transform: translateY(0) scale(1); }
   100% { transform: translateY(30px) scale(1.1); }
 }
+
+/* Theater Mode Styles */
+@media (min-width: 900px) {
+  .layout.theater-mode {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .layout.theater-mode .video-section {
+    width: 100%;
+    max-width: 1000px;
+    flex: none;
+  }
+  
+  .layout.theater-mode .interaction-panel {
+    width: 100%;
+    max-width: 1000px;
+    flex: none;
+  }
+}
+
+.theater-mode-btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+}
