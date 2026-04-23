@@ -7,3 +7,4 @@ faiss-cpu
 sentence-transformers
 moviepy
 python-dotenv
+gunicorn
